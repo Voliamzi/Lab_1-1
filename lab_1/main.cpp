@@ -1,48 +1,32 @@
 #include <iostream>
-#include <cctype>
-#include <locale>
-#include "modAlphaCipher.h"
+#include "TableTranspositionCipher.h"
 using namespace std;
-bool isValid(const wstring& s)
+int main()
 {
-    for(auto c:s)
-        if (!iswalpha(c) || !iswupper(c))
-            return false;
-    return true;
-}
-int main(int argc, char **argv)
-{
-    locale loc("ru_RU.UTF-8");
-    locale::global(loc);
-    wstring key;
-    wstring text;
-    unsigned op;
-    wcout<<"Input key: ";
-    wcin>>key;
-    if (!isValid(key)) {
-        cerr<<"Key not valid\n";
-        return 1;
-    }
-    wcout<<"Key loaded\n";
-    modAlphaCipher cipher(key);
+    string d_text;
+    int key;
+    unsigned operation;
+    cout << "Введите количество столбцов: ";
+    cin >> key;
+    cin.ignore();
+    TableTranspositionCipher cipher(key);
     do {
-        wcout<<"Cipher ready. Input operation (0-exit, 1-encrypt, 2-decrypt): ";
-        wcin>>op;
-        if (op > 2) {
-            wcout<<"Illegal operation\n";
-        } else if (op >0) {
-            wcout<<"Input text: ";
-            wcin>>text;
-            if (isValid(text)) {
-                if (op==1) {
-                    wcout<<"Encrypted text: "<<cipher.encrypt(text)<<endl;
-                } else {
-                    wcout<<"Decrypted text: "<<cipher.decrypt(text)<<endl;
-                }
+        cout<<"Введите операцию (0-выход, 1-зашифровка, 2-расшифровка): ";
+        cin>>operation;
+        if (operation > 2) {
+            cout<<"Недопустимая операция\n";
+        } else if (operation >0) {
+            cout << "Введите текст: ";
+            cin.ignore();
+            getline(cin, d_text);
+            if (operation==1) {
+                string encryptedText = cipher.encrypt(d_text);
+                cout << "Зашифрованный текст: " << encryptedText << endl;
             } else {
-                wcout<<"Operation aborted: invalid text\n";
+                string decryptedText = cipher.decrypt(d_text);
+                cout << "Расшифрованный текст: " << decryptedText << endl;
             }
         }
-    } while (op!=0);
+    } while (operation!=0);
     return 0;
 }
